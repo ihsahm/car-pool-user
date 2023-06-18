@@ -338,7 +338,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_userImage != null) {
       return FileImage(_userImage!);
     } else {
-      return const NetworkImage('images/userImage.png');
+      return const NetworkImage('images/user.png');
     }
   }
 }

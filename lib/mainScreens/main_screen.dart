@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:car_pool_driver/Views/tabPages/my_requests_tab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import '../Constants/styles/colors.dart';
 import '../Models/request.dart';
 import '../Views/tabPages/dashboard.dart';
+import '../Views/tabPages/payment_web_view.dart';
 import '../Views/tabPages/profile_tab.dart';
 import '../Views/tabPages/trip_history_tab.dart';
 import '../global/global.dart';
@@ -105,7 +109,9 @@ class _MainScreenState extends State<MainScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  makePayment(context);
+                },
                 leading: const Icon(Icons.attach_money),
                 title: const Text("Pay driver online"),
               ),
@@ -307,4 +313,42 @@ class _MainScreenState extends State<MainScreen>
           }
         },
       );
+  Future<void> makePayment(BuildContext context) async {
+    var headers = {
+      'Authorization': 'Bearer CHASECK_TEST-NHFsyWe3Vt3pE9Ke4evqbvwvXzjTc0uA',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request(
+        'POST', Uri.parse('https://api.chapa.co/v1/transaction/initialize'));
+    request.body = json.encode({
+      "amount": "100",
+      "currency": "ETB",
+      "email": "tt@gmail.com",
+      "first_name": "Samson",
+      "last_name": "Sisay",
+      "phone_number": "0911243697",
+      "tx_ref": "daszc213dfszzZX",
+      "callback_url":
+          "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      "return_url": "https://www.google.com/",
+      "customization[title]": "Payment for carpooling",
+      "customization[description]": "Payment for Samson Sisay for carpooling"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseBody = await response.stream.bytesToString();
+      final responseJson = json.decode(responseBody);
+      final checkoutUrl = responseJson['data']['checkout_url'];
+      // Navigate to the checkout URL
+      // ignore: use_build_context_synchronously
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => WebViewScreen(checkoutUrl)));
+    } else {
+      Fluttertoast.showToast(msg: response.reasonPhrase.toString());
+      print(response.statusCode);
+    }
+  }
 }

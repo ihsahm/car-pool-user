@@ -16,7 +16,6 @@ import '../../Models/driver.dart';
 import '../../Models/request.dart';
 import '../../Models/trip.dart';
 import '../../global/global.dart';
-import 'package:http/http.dart' as http;
 
 class GetDrivers {
   final databaseReference = FirebaseDatabase.instance.ref('drivers');
@@ -462,8 +461,7 @@ class _AvailableDriversState extends State<AvailableDrivers> {
                                         child: Column(
                                           children: [
                                             const Text('Distance'),
-                                            Text(
-                                                '${distance.toStringAsPrecision(6)} kms'),
+                                            Text('${distance / 1000} kms'),
                                           ],
                                         ),
                                       ),
@@ -620,181 +618,18 @@ class _AvailableDriversState extends State<AvailableDrivers> {
                                           ? 'Requested'
                                           : 'Request',
                                       style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 13,
                                       ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     Future<void> makePayment(
-                            //         BuildContext context) async {
-                            //       var headers = {
-                            //         'Authorization':
-                            //             'Bearer CHASECK_TEST-NHFsyWe3Vt3pE9Ke4evqbvwvXzjTc0uA',
-                            //         'Content-Type': 'application/json'
-                            //       };
-                            //       var request = http.Request(
-                            //           'POST',
-                            //           Uri.parse(
-                            //               'https://api.chapa.co/v1/transaction/initialize'));
-                            //       request.body = json.encode({
-                            //         "amount": "100",
-                            //         "currency": "ETB",
-                            //         "email": "ihs@gmail.com",
-                            //         "first_name": "Abebech",
-                            //         "phone_number": "0929209202",
-                            //         "tx_ref": "2ewxxaaaaAwwq",
-                            //         "callback_url":
-                            //             "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-                            //         "return_url": "https://www.google.com/",
-                            //         "customization[title]":
-                            //             "Payment for carpooling",
-                            //         "customization[description]":
-                            //             "Payment for Samson Sisay for carpooling"
-                            //       });
-                            //       request.headers.addAll(headers);
-                            //
-                            //       http.StreamedResponse response =
-                            //           await request.send();
-                            //
-                            //       if (response.statusCode == 200) {
-                            //         final responseBody =
-                            //             await response.stream.bytesToString();
-                            //         final responseJson = json.decode(responseBody);
-                            //         final checkoutUrl =
-                            //             responseJson['data']['checkout_url'];
-                            //         // Navigate to the checkout URL
-                            //         // ignore: use_build_context_synchronously
-                            //         await Navigator.of(context).push(
-                            //             MaterialPageRoute(
-                            //                 builder: (_) =>
-                            //                     WebViewScreen(checkoutUrl)));
-                            //       } else {
-                            //         print(response.reasonPhrase);
-                            //         print(response.statusCode);
-                            //       }
-                            //     }
-                            //
-                            //     makePayment(context);
-                            //   },
-                            //   style: ElevatedButton.styleFrom(
-                            //     backgroundColor: ColorsConst.greenAccent,
-                            //     elevation: 3,
-                            //     shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(10)),
-                            //   ),
-                            //   child: const Text(
-                            //     'Pay online',
-                            //     style: TextStyle(
-                            //       fontSize: 16,
-                            //     ),
-                            //   ),
-                            // ),
-                            // RatingBar.builder(
-                            //   initialRating: _rating ?? 0.0,
-                            //   minRating: 1,
-                            //   direction: Axis.horizontal,
-                            //   allowHalfRating: false,
-                            //   itemCount: 5,
-                            //   itemSize: 50,
-                            //   itemPadding:
-                            //       const EdgeInsets.symmetric(horizontal: 8),
-                            //   itemBuilder: (context, _) => Icon(
-                            //     _selectedIcon ?? Icons.star,
-                            //     color: ColorsConst.amber,
-                            //   ),
-                            //   onRatingUpdate: (rating) async {
-                            //     _rating = rating;
-                            //     double? avgRating;
-                            //     String? numberOfRatings;
-                            //     final ref =
-                            //         FirebaseDatabase.instance.ref('drivers');
-                            //     final snapshot = await ref
-                            //         .child(closeTrips[index].driverID)
-                            //         .child('averageRating')
-                            //         .get();
-                            //     if (snapshot.exists) {
-                            //       avgRating =
-                            //           double.parse(snapshot.value.toString());
-                            //     } else {
-                            //       const AlertDialog(
-                            //           semanticLabel: 'No data available.');
-                            //     }
-                            //
-                            //     final snapshot2 = await ref
-                            //         .child(closeTrips[index].driverID)
-                            //         .child('noOfRatings')
-                            //         .get();
-                            //     numberOfRatings = snapshot2.value.toString();
-                            //
-                            //     avgRating =
-                            //         ((avgRating! * int.parse(numberOfRatings)) +
-                            //                 _rating!) /
-                            //             (int.parse(numberOfRatings) + 1);
-                            //
-                            //     FirebaseDatabase.instance
-                            //         .ref("drivers")
-                            //         .child(closeTrips[index].driverID)
-                            //         .update(
-                            //             {"averageRating": avgRating.toString()});
-                            //     FirebaseDatabase.instance
-                            //         .ref("drivers")
-                            //         .child(closeTrips[index].driverID)
-                            //         .update({
-                            //       "noOfRatings":
-                            //           (int.parse(numberOfRatings) + 1).toString()
-                            //     });
-                            //
-                            //     setState(() {});
-                            //   },
-                            // ),
                           ]),
                         );
                       }),
           ],
         ));
-  }
-
-  Future<void> makePayment(BuildContext context) async {
-    var headers = {
-      'Authorization': 'Bearer CHASECK_TEST-NHFsyWe3Vt3pE9Ke4evqbvwvXzjTc0uA',
-      'Content-Type': 'application/json'
-    };
-    var request = http.Request(
-        'POST', Uri.parse('https://api.chapa.co/v1/transaction/initialize'));
-    request.body = json.encode({
-      "amount": "100",
-      "currency": "ETB",
-      "email": "tt@gmail.com",
-      "first_name": "Samson",
-      "last_name": "Sisay",
-      "phone_number": "0911243697",
-      "tx_ref": "sdadas2121ccxx",
-      "callback_url":
-          "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
-      "return_url": "https://www.google.com/",
-      "customization[title]": "Payment for carpooling",
-      "customization[description]": "Payment for Samson Sisay for carpooling"
-    });
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      final responseBody = await response.stream.bytesToString();
-      final responseJson = json.decode(responseBody);
-      final checkoutUrl = responseJson['data']['checkout_url'];
-      // Navigate to the checkout URL
-      // ignore: use_build_context_synchronously
-      await Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => WebViewScreen(checkoutUrl)));
-    } else {
-      print(response.reasonPhrase);
-      print(response.statusCode);
-    }
   }
 
   String formatDate(String inputStr) {
