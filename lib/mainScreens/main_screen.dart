@@ -37,6 +37,28 @@ class _MainScreenState extends State<MainScreen>
     });
   }
 
+  final CollectionReference collectionRef =
+      FirebaseFirestore.instance.collection('tripStatus');
+  Future<void> deleteTripCollection() async {
+    final QuerySnapshot snapshot = await collectionRef.get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+
+    for (DocumentSnapshot document in documents) {
+      await document.reference.delete();
+    }
+  }
+
+  final CollectionReference poolCollectionRef =
+      FirebaseFirestore.instance.collection('poolStatus');
+  Future<void> deletePoolCollection() async {
+    final QuerySnapshot snapshot = await collectionRef.get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+
+    for (DocumentSnapshot document in documents) {
+      await document.reference.delete();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +73,8 @@ class _MainScreenState extends State<MainScreen>
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
+        deletePoolCollection();
+        deleteTripCollection();
         showpaymentDialog();
       },
     );
