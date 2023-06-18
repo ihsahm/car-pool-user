@@ -62,7 +62,6 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-    final String currentUserID = currentFirebaseUser!.uid;
     tabController = TabController(length: 4, vsync: this);
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings("@mipmap/ic_launcher");
@@ -371,8 +370,9 @@ class _MainScreenState extends State<MainScreen>
       await Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => WebViewScreen(checkoutUrl)));
     } else {
-      Fluttertoast.showToast(msg: response.reasonPhrase.toString());
-      print(response.statusCode);
+      Fluttertoast.showToast(
+          msg: response.statusCode.toString() +
+              response.reasonPhrase.toString());
     }
   }
 }

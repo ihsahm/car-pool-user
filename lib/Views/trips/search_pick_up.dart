@@ -1,5 +1,6 @@
 import 'package:car_pool_driver/Models/address.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../../Constants/styles/styles.dart';
@@ -213,7 +214,7 @@ class _SearchPickUpScreenState extends State<SearchPickUpScreen> {
 
       Navigator.pop(context);
     } catch (e) {
-      print(e);
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       setState(() {
         _isLoading = false;

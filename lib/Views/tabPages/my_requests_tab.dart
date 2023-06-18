@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../Constants/styles/colors.dart';
 import '../../widgets/progress_dialog.dart';
 
-
 class MyRequests extends StatefulWidget {
   const MyRequests({Key? key}) : super(key: key);
 
@@ -33,7 +32,6 @@ class _MyRequestsState extends State<MyRequests> {
       });
     });
     _isCancelButtonClickedList = List.filled(pendingRequests.length, false);
-
   }
 
   final databaseReference = FirebaseDatabase.instance.ref('requests');
@@ -42,15 +40,13 @@ class _MyRequestsState extends State<MyRequests> {
     List<Request> itemList = [];
 
     try {
-
-
       final dataSnapshot = await databaseReference
           .orderByChild('userID')
           .equalTo(currentFirebaseUser!.uid)
           .once();
 
       Map<dynamic, dynamic> values =
-      dataSnapshot.snapshot.value as Map<dynamic, dynamic>;
+          dataSnapshot.snapshot.value as Map<dynamic, dynamic>;
       values.forEach((key, value) {
         final item = Request(
             requestID: value['requestID'],
@@ -61,7 +57,7 @@ class _MyRequestsState extends State<MyRequests> {
         itemList.add(item);
       });
     } catch (e) {
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
     return itemList;
   }
@@ -70,7 +66,7 @@ class _MyRequestsState extends State<MyRequests> {
     List<Request> requests = await getPendingRequests();
     setState(() {
       this.requests = requests;
-      for(var r in requests){
+      for (var r in requests) {
         if (r.status == 'pending') pendingRequests.add(r);
       }
       _isCancelButtonClickedList = List.filled(pendingRequests.length, false);
@@ -83,14 +79,17 @@ class _MyRequestsState extends State<MyRequests> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: (pendingRequests.isEmpty) ? Colors.white : const Color(0xFFEDEDED),
+      backgroundColor:
+          (pendingRequests.isEmpty) ? Colors.white : const Color(0xFFEDEDED),
       body: Stack(
         children: [
-              if(isLoading)
-                ProgressDialog(message: "Processing....",)
-              else
-                (pendingRequests.isEmpty) ?
-                  Center(
+          if (isLoading)
+            ProgressDialog(
+              message: "Processing....",
+            )
+          else
+            (pendingRequests.isEmpty)
+                ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -104,33 +103,38 @@ class _MyRequestsState extends State<MyRequests> {
                         const Text(
                           "YOU HAVE NO PENDING REQUESTS !!!",
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.blueGrey, fontSize: 18),
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blueGrey,
+                              fontSize: 18),
                         ),
                       ],
                     ),
-                  ):
-                  ListView.builder(
-                      itemCount: pendingRequests.length,
-                      itemBuilder: (context, index) {
-                        return StreamBuilder(
-                          stream: ref.child(pendingRequests[index].tripID).onValue,
-                          builder: (context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Container();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (!snapshot.hasData ||
-                                snapshot.data?.snapshot?.value == null) {
-                              return Container();
-                            } else {
-                              Map<dynamic, dynamic> trip = snapshot.data.snapshot.value;
-                              return buildDriverData(index, trip);
-                            }
-                          },
-                        );
-                      }),
-            ],
-          ),
+                  )
+                : ListView.builder(
+                    itemCount: pendingRequests.length,
+                    itemBuilder: (context, index) {
+                      return StreamBuilder(
+                        stream:
+                            ref.child(pendingRequests[index].tripID).onValue,
+                        builder: (context, AsyncSnapshot snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData ||
+                              snapshot.data?.snapshot?.value == null) {
+                            return Container();
+                          } else {
+                            Map<dynamic, dynamic> trip =
+                                snapshot.data.snapshot.value;
+                            return buildDriverData(index, trip);
+                          }
+                        },
+                      );
+                    }),
+        ],
+      ),
     );
   }
 
@@ -267,10 +271,10 @@ class _MyRequestsState extends State<MyRequests> {
                 width: 125,
                 child: ElevatedButton(
                   onPressed:
-                  //acceptRequest(requests[index]);
-                  _isCancelButtonClickedList[index]
-                      ? null
-                      : () => _onCancelButtonPressed(index),
+                      //acceptRequest(requests[index]);
+                      _isCancelButtonClickedList[index]
+                          ? null
+                          : () => _onCancelButtonPressed(index),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ColorsConst.greenAccent,
                     elevation: 3,
@@ -278,9 +282,7 @@ class _MyRequestsState extends State<MyRequests> {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   child: Text(
-                    _isCancelButtonClickedList[index]
-                        ? 'Cancelled'
-                        : 'Cancel',
+                    _isCancelButtonClickedList[index] ? 'Cancelled' : 'Cancel',
                     style: const TextStyle(
                       fontSize: 16,
                     ),
@@ -299,8 +301,8 @@ class _MyRequestsState extends State<MyRequests> {
         .update({"status": "cancelled"});
 
     Fluttertoast.showToast(msg: "Request Cancelled");
-
   }
+
   void _onCancelButtonPressed(int index) async {
     setState(() {
       _isCancelButtonClickedList[index] = true;

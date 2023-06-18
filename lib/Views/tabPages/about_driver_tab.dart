@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../Models/trip.dart';
 import '../../widgets/progress_dialog.dart';
@@ -54,8 +55,7 @@ class _AboutDriverState extends State<AboutDriver> {
         itemList.add(item);
       });
     } catch (e) {
-      // Log the error and return an empty list
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
 
     return itemList;

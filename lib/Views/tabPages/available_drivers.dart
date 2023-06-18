@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:car_pool_driver/Views/tabPages/about_driver_tab.dart';
-import 'package:car_pool_driver/Views/tabPages/payment_web_view.dart';
 import 'package:car_pool_driver/widgets/progress_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -49,8 +47,7 @@ class GetDrivers {
         itemList.add(item);
       });
     } catch (e) {
-      // Log the error and return an empty list
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
     return itemList;
   }
@@ -144,8 +141,7 @@ class _AvailableDriversState extends State<AvailableDrivers> {
         itemList.add(item);
       });
     } catch (e) {
-      // Log the error and return an empty list
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
 
     return itemList;
@@ -171,13 +167,11 @@ class _AvailableDriversState extends State<AvailableDrivers> {
           double.parse(widget.userLongPos),
           double.parse(t.pickUpLatPos),
           double.parse(t.pickUpLongPos));
-      print(distance);
 
       if (distance < 2.0 &&
           t.availableSeats != '0' &&
           t.status == 'scheduled') {
         closeTrips.add(t);
-        print(closeTrips[i].destinationLocation);
         i++;
       }
     }
@@ -186,10 +180,6 @@ class _AvailableDriversState extends State<AvailableDrivers> {
 
   final requestRef = FirebaseDatabase.instance.ref('requests');
   Future<void> rateDriver() {
-    List<TripsModel> trips = [];
-    double? _rating;
-    IconData? _selectedIcon;
-
     return showDialog(
         context: context,
         builder: (builder) {

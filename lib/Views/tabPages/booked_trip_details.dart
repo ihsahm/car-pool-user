@@ -10,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Constants/widgets/loading.dart';
 import '../../Models/driver.dart';
@@ -243,8 +244,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
         itemList.add(item);
       });
     } catch (e) {
-      // Log the error and return an empty list
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
     return itemList;
   }
@@ -291,7 +291,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
         itemList.add(item);
       });
     } catch (e) {
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
     return itemList;
   }
@@ -381,7 +381,6 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
                     constraints: const BoxConstraints(maxWidth: 250),
                     child: Text(
                       trip['destinationLocation'],
-                      //'Lideta Condominium',
                       style: const TextStyle(
                         fontSize: 16,
                         overflow: TextOverflow.ellipsis,
@@ -573,7 +572,11 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
               onPressed: () {
-                //requestRide(trips[index]);
+                final Uri phoneLaunch = Uri(
+                  scheme: 'tel',
+                  path: driver['phone'],
+                );
+                launchUrl(phoneLaunch);
               },
               icon: const Icon(
                 Icons.call,

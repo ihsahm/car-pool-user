@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:car_pool_driver/Models/request.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../Constants/styles/colors.dart';
 import '../../global/global.dart';
@@ -52,8 +53,7 @@ class _TripHistoryTabPageState extends State<TripHistoryTabPage> {
         itemList.add(item);
       });
     } catch (e) {
-      // Log the error and return an empty list
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
     return itemList;
   }

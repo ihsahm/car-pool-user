@@ -410,7 +410,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   Future<void> _saveToFirebase(BuildContext context) async {
-    String dropdownvalue = '1 passenger';
     var currentSelectedValue;
     return showDialog(
         context: context,
@@ -569,9 +568,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
         // ignore: use_build_context_synchronously
         Fluttertoast.showToast(msg: "Congratulations,your pool has been added");
       } catch (ex) {
-        print("Your error is $ex");
         Navigator.pop(context);
-        Fluttertoast.showToast(msg: "Pool has not been added");
+        Fluttertoast.showToast(msg: "Pool has not been added $ex");
       }
     }
   }

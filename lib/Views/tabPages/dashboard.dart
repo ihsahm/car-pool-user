@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:car_pool_driver/Views/data%20handler/app_data.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -46,8 +47,7 @@ class GetRequests {
         itemList.add(item);
       });
     } catch (e) {
-      // Log the error and return an empty list
-      print('Error: $e');
+      Fluttertoast.showToast(msg: e.toString());
     }
     return itemList;
   }
