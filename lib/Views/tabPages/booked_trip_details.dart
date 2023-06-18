@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:car_pool_driver/Models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,8 +9,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../Constants/widgets/loading.dart';
 import '../../Models/driver.dart';
 import '../../Models/request.dart';
@@ -64,6 +61,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
         var dropOffLatLng = LatLng(
             double.parse(tripData['destinationLatitude']),
             double.parse(tripData['destinationLongitude']));
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (BuildContext context) =>
@@ -71,6 +69,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
         var details = await AssistantMethods.obtainDirectionDetails(
             pickUpLatLng, dropOffLatLng);
 
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
 
         PolylinePoints polylinePoints = PolylinePoints();
@@ -244,7 +243,8 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      // Log the error and return an empty list
+      Fluttertoast.showToast(msg: 'Error: $e');
     }
     return itemList;
   }
@@ -291,7 +291,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(msg: 'Error: $e');
     }
     return itemList;
   }
@@ -302,9 +302,30 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.greenAccent,
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        centerTitle: true,
+        title: const Padding(
+          padding: EdgeInsets.only(top: 4.0),
+          child: Text(
+            'Trip History',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
       body: Column(children: [
         const SizedBox(
-          height: 25,
+          height: 15,
         ),
         StreamBuilder(
           stream: driverRef.child(widget.request.driverID).onValue,
@@ -381,6 +402,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
                     constraints: const BoxConstraints(maxWidth: 250),
                     child: Text(
                       trip['destinationLocation'],
+                      //'Lideta Condominium',
                       style: const TextStyle(
                         fontSize: 16,
                         overflow: TextOverflow.ellipsis,
@@ -460,26 +482,39 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
               ]),
             ],
           ),
-          SizedBox(
-            height: 50,
-            width: 300,
-            child: ElevatedButton(
-              onPressed: () {
-                cancelRequest();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              child: const Text(
-                'Cancel Ride',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
+          Column(
+            children: [
+              if (widget.request.status == 'accepted')
+                SizedBox(
+                  height: 50,
+                  width: 300,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      cancelRequest();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: const Text(
+                      'Cancel Ride',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Text(
+                  'Total Fare : ${double.parse(trip['fare']).toStringAsPrecision(2)} birr',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+            ],
           ),
         ],
       );
@@ -572,11 +607,7 @@ class _MyBookedTripsState extends State<MyBookedTrips> {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
               onPressed: () {
-                final Uri phoneLaunch = Uri(
-                  scheme: 'tel',
-                  path: driver['phone'],
-                );
-                launchUrl(phoneLaunch);
+                //requestRide(trips[index]);
               },
               icon: const Icon(
                 Icons.call,

@@ -1,6 +1,5 @@
 import 'package:car_pool_driver/Models/address.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../../Constants/styles/styles.dart';
@@ -111,7 +110,7 @@ class _SearchPickUpScreenState extends State<SearchPickUpScreen> {
                         ),
                         labelStyle: StylesConst.labelStyle,
                         suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
+                          icon: Icon(Icons.clear),
                           onPressed: () {
                             pickUpTextEditingController.clear();
                           },
@@ -135,15 +134,15 @@ class _SearchPickUpScreenState extends State<SearchPickUpScreen> {
                     locatePosition();
                   },
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.blue,
+                    primary: Colors.blue, // button text color
                     backgroundColor: Colors.white, // button background color
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         // button border radius
-                        side: const BorderSide(
+                        side: BorderSide(
                             color: Colors.greenAccent) // button border
                         ),
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0), // button padding
                   ),
                   child: Row(
@@ -161,7 +160,7 @@ class _SearchPickUpScreenState extends State<SearchPickUpScreen> {
                 ),
                 if (_isLoading)
                   Padding(
-                    padding: const EdgeInsets.only(top: 16),
+                    padding: EdgeInsets.only(top: 16),
                     child: Column(
                       children: const [
                         CircularProgressIndicator(),
@@ -214,7 +213,7 @@ class _SearchPickUpScreenState extends State<SearchPickUpScreen> {
 
       Navigator.pop(context);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      print(e);
     } finally {
       setState(() {
         _isLoading = false;

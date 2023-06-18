@@ -1,13 +1,14 @@
 import 'dart:core';
 
 import 'package:car_pool_driver/Models/request.dart';
+import 'package:car_pool_driver/Models/trip.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../Constants/styles/colors.dart';
 import '../../global/global.dart';
 import '../../widgets/progress_dialog.dart';
+import 'booked_trip_details.dart';
 
 class TripHistoryTabPage extends StatefulWidget {
   const TripHistoryTabPage({Key? key}) : super(key: key);
@@ -53,7 +54,8 @@ class _TripHistoryTabPageState extends State<TripHistoryTabPage> {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      // Log the error and return an empty list
+      print('Error: $e');
     }
     return itemList;
   }
@@ -121,7 +123,7 @@ class _TripHistoryTabPageState extends State<TripHistoryTabPage> {
                                 Map<dynamic, dynamic> trip =
                                     snapshot.data.snapshot.value;
                                 return buildTripDetails(
-                                    trip, finishedRequests[index]);
+                                    trip, finishedRequests[index], index);
                               }
                             },
                           );
@@ -132,7 +134,8 @@ class _TripHistoryTabPageState extends State<TripHistoryTabPage> {
         ));
   }
 
-  Widget buildTripDetails(Map<dynamic, dynamic> trip, Request request) =>
+  Widget buildTripDetails(
+          Map<dynamic, dynamic> trip, Request request, int index) =>
       Column(
         children: [
           const SizedBox(
@@ -149,7 +152,7 @@ class _TripHistoryTabPageState extends State<TripHistoryTabPage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
                 Text(
@@ -170,9 +173,11 @@ class _TripHistoryTabPageState extends State<TripHistoryTabPage> {
             ),
             trailing: const Icon(Icons.navigate_next),
             onTap: () {
-              //  Navigator.of(context).push(MaterialPageRoute(
-              //  builder: (context) => TripHistoryDetails(item:trips[index]),
-              // ));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MyBookedTrips(
+                  request: finishedRequests[index],
+                ),
+              ));
             },
           ),
           const Padding(

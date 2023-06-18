@@ -55,7 +55,8 @@ class _AboutDriverState extends State<AboutDriver> {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      // Log the error and return an empty list
+      Fluttertoast.showToast(msg: 'Error: $e');
     }
 
     return itemList;

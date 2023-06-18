@@ -15,7 +15,6 @@ class RequestAssistant {
         return "Failed, No Response";
       }
     } catch (ex) {
-      print(ex);
       return "Failed,";
     }
   }

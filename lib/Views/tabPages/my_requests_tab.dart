@@ -57,7 +57,7 @@ class _MyRequestsState extends State<MyRequests> {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      print('Error: $e');
     }
     return itemList;
   }

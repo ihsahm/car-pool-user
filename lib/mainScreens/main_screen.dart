@@ -350,7 +350,7 @@ class _MainScreenState extends State<MainScreen>
       "first_name": "Samson",
       "last_name": "Sisay",
       "phone_number": "0911243697",
-      "tx_ref": "daszc213dfszzZX",
+      "tx_ref": "Xzasda2213AZZZ23",
       "callback_url":
           "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
       "return_url": "https://www.google.com/",

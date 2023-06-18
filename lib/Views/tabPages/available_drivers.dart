@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:car_pool_driver/Views/tabPages/about_driver_tab.dart';
 import 'package:car_pool_driver/widgets/progress_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,11 +8,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+
 import '../../Constants/styles/colors.dart';
 import '../../Models/driver.dart';
 import '../../Models/request.dart';
 import '../../Models/trip.dart';
 import '../../global/global.dart';
+import 'about_driver_tab.dart';
 
 class GetDrivers {
   final databaseReference = FirebaseDatabase.instance.ref('drivers');
@@ -47,7 +48,8 @@ class GetDrivers {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      // Log the error and return an empty list
+      Fluttertoast.showToast(msg: 'Error: $e');
     }
     return itemList;
   }
@@ -141,7 +143,8 @@ class _AvailableDriversState extends State<AvailableDrivers> {
         itemList.add(item);
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      // Log the error and return an empty list
+      Fluttertoast.showToast(msg: 'Error: $e');
     }
 
     return itemList;
@@ -167,11 +170,13 @@ class _AvailableDriversState extends State<AvailableDrivers> {
           double.parse(widget.userLongPos),
           double.parse(t.pickUpLatPos),
           double.parse(t.pickUpLongPos));
+      print(distance);
 
       if (distance < 2.0 &&
           t.availableSeats != '0' &&
           t.status == 'scheduled') {
         closeTrips.add(t);
+        print(closeTrips[i].destinationLocation);
         i++;
       }
     }
@@ -180,6 +185,8 @@ class _AvailableDriversState extends State<AvailableDrivers> {
 
   final requestRef = FirebaseDatabase.instance.ref('requests');
   Future<void> rateDriver() {
+    List<TripsModel> trips = [];
+
     return showDialog(
         context: context,
         builder: (builder) {
@@ -451,7 +458,8 @@ class _AvailableDriversState extends State<AvailableDrivers> {
                                         child: Column(
                                           children: [
                                             const Text('Distance'),
-                                            Text('${distance / 1000} kms'),
+                                            Text(
+                                                '${distance.toStringAsPrecision(6)} kms'),
                                           ],
                                         ),
                                       ),
@@ -608,7 +616,7 @@ class _AvailableDriversState extends State<AvailableDrivers> {
                                           ? 'Requested'
                                           : 'Request',
                                       style: const TextStyle(
-                                        fontSize: 13,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ),
