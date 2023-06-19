@@ -215,39 +215,39 @@ class _AboutDriverState extends State<AboutDriver> {
                 'Trips',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
               ),
-              Stack(children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: trips.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                title: Text(
-                                  trips[index].destinationLocation.toString(),
-                                  style: const TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                    '${trips[index].date} at ${trips[index].time}'),
-                                leading: const Icon(
-                                    Icons.location_searching_sharp,
-                                    color: Colors.greenAccent),
-                              ),
-                              const Divider(),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ]),
+              // Stack(children: [
+              //   Padding(
+              //     padding: const EdgeInsets.all(20.0),
+              //     child: Column(
+              //       children: [
+              //         ListView.builder(
+              //           shrinkWrap: true,
+              //           itemCount: trips.length,
+              //           itemBuilder: (context, index) {
+              //             return Column(
+              //               children: [
+              //                 ListTile(
+              //                   title: Text(
+              //                     trips[index].destinationLocation.toString(),
+              //                     style: const TextStyle(
+              //                       overflow: TextOverflow.ellipsis,
+              //                     ),
+              //                   ),
+              //                   subtitle: Text(
+              //                       '${trips[index].date} at ${trips[index].time}'),
+              //                   leading: const Icon(
+              //                       Icons.location_searching_sharp,
+              //                       color: Colors.greenAccent),
+              //                 ),
+              //                 const Divider(),
+              //               ],
+              //             );
+              //           },
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ]),
             ],
           ),
         ),
